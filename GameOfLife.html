@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<script src="jquery-3.1.1.js"></script>
+
+<script>
+	userSize = 150;
+	
+	randomRed = Math.floor(Math.random() * 256);
+	randomGreen = Math.floor(Math.random() * 256);
+	randomBlue = Math.floor(Math.random() * 256);
+	
+	//function for manually specifying the live divs
+	function initialize_withSpecified()
+	{
+		//Create the 2 background arrays
+		array = [];
+		temparray = [];
+		for (var i=0; i < userSize ;i++) 
+		{
+			array[i] = [];
+			temparray[i] = [];
+		}
+		//Give the 2 background arrays a value	
+		for(y = 0; y < userSize; y++) 
+		{
+			for(x = 0; x < userSize; x++) 
+			{
+				
+				//rand = Math.floor(Math.random() * 2)
+				array[y][x] = 0;
+				temparray[y][x] = 0;
+			}
+		}
+		
+		//Specify the live divs
+		array[5][5] = 1;
+		array[6][6] = 1;
+		array[7][6] = 1;
+		array[7][5] = 1;
+		array[7][4] = 1;
+		
+		//Create the div field based on the array values
+		for(y = 0; y < userSize; y++) 
+		{
+			for(x = 0; x < userSize; x++) 
+			{
+				loc = (y) + 'bye' + (x);
+				if (array[y][x] == 0)
+				{
+					$('#field').append('<div class="box dead" id="' + loc + '" />');
+				}
+				else if (array[y][x] == 1)
+				{
+					$('#field').append('<div class="box live" id="' + loc + '" />');
+				}
+			} 
+		$('#field').append('<br>'); 
+		}
+	}
+	
+	//Same thing as above, but with random live divs
+	function initialize_withRandom()
+	{
+		array = [];
+		temparray = [];
+		for (var i=0; i < userSize ;i++) 
+		{
+			array[i] = [];
+			temparray[i] = [];
+		}
+
+		for(y = 0; y < userSize; y++) 
+		{
+			for(x = 0; x < userSize; x++) 
+			{
+				loc = (y) + 'bye' + (x);
+				rand = Math.floor(Math.random() * 2)
+				array[y][x] = rand;
+				temparray[y][x] = rand;
+				if (rand == 0)
+				{
+					$('#field').append('<div class="box dead" id="' + loc + '" />');
+				}
+				else if (rand == 1)
+				{
+					$('#field').append('<div class="box live" id="' + loc + '" />');
+				}
+			} 
+		$('#field').append('<br>'); 
+		}
+	}
+
+	function Run()
+	{
+		setInterval(function()
+		{
+			GOL();
+		}, 25);
+	}
+	
+	//Function that contains the evaluations and then draws the new div field
+	//Aka it updates the classes of the divs
+	function GOL()
+	{
+        for (y = 0; y < userSize; y++)
+        {
+            for (x = 0; x < userSize; x++)
+            {
+				var proximityCounter = 0;
+                // Live evaluations
+                if (array[y][x] == 1)
+                {
+                    if (x < (userSize - 1) && array[y][(x + 1)] == 1)
+                    {
+						proximityCounter++;
+                    }
+                    if (x < (userSize - 1) && y < (userSize - 1) && array[(y + 1)][(x + 1)] == 1)
+                    {
+						proximityCounter++;
+                    }
+                    if (y < (userSize - 1) && array[(y + 1)][x] == 1)
+                    {
+                        proximityCounter++;
+                    }
+                    if (x > 0 && array[y][(x - 1)] == 1)
+                    {
+                        proximityCounter++;
+                    }
+                    if (x > 0 && y > 0 && array[(y - 1)][(x - 1)] == 1)
+                    {
+                        proximityCounter++;
+                    }
+                    if (y > 0 && array[(y - 1)][x] == 1)
+                    {
+                        proximityCounter++;
+                    }
+                    if (y > 0 && x < (userSize - 1) && array[(y - 1)][(x + 1)] == 1)
+                    {
+                        proximityCounter++;
+                    }
+                    if (x > 0 && y < (userSize - 1) && array[(y + 1)][(x - 1)] == 1)
+                    {
+                        proximityCounter++;
+                    }
+                    if (proximityCounter < 2)
+                    {
+                        temparray[y][x] = 0;
+                    }
+                    if (proximityCounter == 2 || proximityCounter == 3)
+                    {
+                        temparray[y][x] = 1;
+                    }
+                    if (proximityCounter > 3)
+                    {
+                        temparray[y][x] = 0;
+                    }
+                }
+                // 0 evaluations
+				if (array[y][x] == 0)
+                {
+					if (x < (userSize - 1) && array[y][(x + 1)] == 1)
+                    {
+                        proximityCounter++;
+                    }
+                    if (x < (userSize - 1) && y < (userSize - 1) && array[(y + 1)][(x + 1)] == 1)
+                    {
+                        proximityCounter++;
+                    }
+                    if (y < (userSize - 1) && array[(y + 1)][x] == 1)
+                    {
+                        proximityCounter++;
+                    }
+                    if (x > 0 && array[y][(x - 1)] == 1)
+                    {
+                        proximityCounter++;
+                    }
+                    if (x > 0 && y > 0 && array[(y - 1)][(x - 1)] == 1)
+                    {
+                        proximityCounter++;
+                    }
+                    if (y > 0 && array[(y - 1)][x] == 1)
+                    {
+                        proximityCounter++;
+                    }
+                    if (y > 0 && x < (userSize - 1) && array[(y - 1)][(x + 1)] == 1)
+                    {
+                        proximityCounter++;
+                    }
+                    if (x > 0 && y < (userSize - 1) && array[(y + 1)][(x - 1)] == 1)
+                    {
+                        proximityCounter++;
+                    }
+                    if (proximityCounter == 3)
+                    {
+                        temparray[y][x] = 1;
+                    }
+                }
+            }
+        }
+        array = temparray; 
+		temparray = new Array;
+		for (var i=0; i < userSize ;i++) 
+		{
+			temparray[i] = [];
+		}
+			
+		for(y = 0; y < userSize; y++) 
+		{
+			for(x = 0; x < userSize; x++) 
+			{
+				temparray[y][x] = 0;
+			}
+		}			
+
+		draw();
+    }	
+
+	//Function that draws the field of divs, AKA changes their class
+	function draw()
+	{
+		for (y = 0; y < userSize; y++)
+		{
+			for (x = 0; x < userSize; x++)
+			{	
+				if (array[y][x] == 1)
+				{
+					$('#' + (y) + 'bye' + (x)).removeClass("dead");
+					$('#' + (y) + 'bye' + (x)).addClass("live");
+				}
+				else if (array[y][x] == 0)
+				{
+					$('#' + (y) + 'bye' + (x)).removeClass("live");
+					$('#' + (y) + 'bye' + (x)).addClass("dead");
+				}
+			}
+		}
+	}
+	
+	//Runs the proper starting function	
+	$(document).ready(initialize_withRandom);
+</script>
+
+<style type="text/css">
+
+body {
+	text-align:center;
+	background-color: #E1E1E1;
+}
+
+#field {
+	margin:0px;
+	line-height:0em;
+	border: 8px solid #004603;
+	display: inline-block;
+	padding: 0px;
+	font-size: 0;
+}
+
+br {
+   display: block;
+   margin: 0px;
+   line-height: 0em;
+   padding: 0px;
+}
+
+.live{
+background-color: black;
+}
+
+
+.dead{
+background-color: grey;
+}
+
+.box{
+	height:3px;
+	width:3px;
+	margin:0px;
+	padding:0px;
+	display:inline-block;
+	line-height: 0em;
+
+
+
+}
+
+.wrapper{
+	margin:0px;
+	padding:0px;
+	line-height:0em;
+	display:block;
+}
+
+#button {
+	background-color: blue;
+	color: white;
+	border: 1px solid black;
+	border-radius: 10px;
+	display:inline-block;
+	padding-right: 30px;
+	padding-left: 30px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin: 0px;
+	vertical-align: middle;
+	line-height: 1em;
+	
+}
+
+span {
+	vertical-align: middle;
+}
+
+.myButton {
+	-moz-box-shadow: 2px 2px 3px 0px #141412;
+	-webkit-box-shadow: 2px 2px 3px 0px #141412;
+	box-shadow: 2px 2px 3px 0px #141412;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #d4c1d4), color-stop(1, #423052));
+	background:-moz-linear-gradient(top, #d4c1d4 5%, #423052 100%);
+	background:-webkit-linear-gradient(top, #d4c1d4 5%, #423052 100%);
+	background:-o-linear-gradient(top, #d4c1d4 5%, #423052 100%);
+	background:-ms-linear-gradient(top, #d4c1d4 5%, #423052 100%);
+	background:linear-gradient(to bottom, #d4c1d4 5%, #423052 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#d4c1d4', endColorstr='#423052',GradientType=0);
+	background-color:#d4c1d4;
+	-moz-border-radius:15px;
+	-webkit-border-radius:15px;
+	border-radius:15px;
+	border:2px solid #000000;
+	display:inline-block;
+	cursor:pointer;
+	color:#000000;
+	font-family:Verdana;
+	font-size:14px;
+	font-weight:bold;
+	font-style:italic;
+	padding:12px 16px;
+	text-decoration:none;
+	text-shadow:0px 1px 3px #ffffff;
+}
+.myButton:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #423052), color-stop(1, #d4c1d4));
+	background:-moz-linear-gradient(top, #423052 5%, #d4c1d4 100%);
+	background:-webkit-linear-gradient(top, #423052 5%, #d4c1d4 100%);
+	background:-o-linear-gradient(top, #423052 5%, #d4c1d4 100%);
+	background:-ms-linear-gradient(top, #423052 5%, #d4c1d4 100%);
+	background:linear-gradient(to bottom, #423052 5%, #d4c1d4 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#423052', endColorstr='#d4c1d4',GradientType=0);
+	background-color:#423052;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+
+
+
+</style>
+
+</head>
+
+<body>
+	<center>
+	<div id="field"></div>
+
+	<p><button class="myButton" onClick="Run()">Click</button></p>
+	</center>
+</body>
+</html>
